@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lcz.blog.mapper.UserDao">
+    <resultMap id="userMap" type="com.lcz.blog.bean.UserBean">
+        <id column="id" property="id"/>
+        <result column="type" property="type"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="email" property="email"/>
+        <result column="website" property="website"/>
+        <result column="image" property="image"/>
+        <result column="is_locked" property="isLocked"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <insert id="save">
+        INSERT INTO t_user
+        (
+            `type`,
+            username,
+            password,
+            nickname,
+            email,
+            website,
+            image,
+            is_locked,
+            create_date
+        )VALUES(
+            #{type},
+            #{username},
+            #{password},
+            #{nickname},
+            #{email},
+            #{website},
+            #{image},
+            #{isLocked},
+            #{createDate}
+        )
+    </insert>
+    <update id="update">
+        UPDATE t_user
+        SET
+            nickname = #{nickname},
+            password = #{password},
+            email = #{email},
+            `type` = #{type},
+            website = #{website},
+            image = #{image}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_user
+        WHERE id = #{id}
+    </delete>
+
+    <select id="login" resultMap="userMap">
+        SELECT *
+        FROM t_user
+        WHERE username = #{username} AND password = #{password}
+    </select>
+
+    <select id="queryUserByName" resultMap="userMap">
+        SELECT *
+        FROM t_user
+        WHERE username = #{username}
+    </select>
+
+    <select id="queryList" resultMap="userMap">
+        SELECT *
+        FROM t_user
+    </select>
+
+    <select id="queryUserNoPwd" resultMap="userMap">
+        select
+            id,
+            `type`,
+            username,
+            nickname,
+            email,
+            website,
+            image,
+            is_locked,
+            create_date
+        from
+            t_user
+    </select>
+
+    <select id="queryObject" resultMap="userMap">
+        SELECT *
+        FROM t_user
+        WHERE id = #{id}
+    </select>
+
+    <select id="pagination" resultMap="userMap">
+        SELECT *
+        FROM t_user
+        ORDER BY create_date DESC
+        LIMIT #{startIndex}, #{pageSize};
+    </select>
+
+    <update id="onOffLockUser">
+        UPDATE t_user
+        SET is_locked = #{isLocked}
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>

@@ -1,0 +1,69 @@
+##非空判断
+#if($error)
+<div class="alert alert-warning">
+    <a href="#" class="close" data-dismiss="alert">
+        &times;
+    </a>
+    <strong>错误:</strong>${error}<a href="/">返回首页</a>
+</div>
+#else
+<ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li><a
+            href="/category/${article.category.id}">${article.category.name}</a></li>
+    <li class="active">${article.title}</li>
+</ol>
+
+<article class="well">
+    <section class="article-content clearfix article-page">
+        ${article.content}
+    </section>
+    <div align="center">
+        <section class="article-copyright">
+            <p>
+                上一篇：<a
+                    href="/article/$!{preArticle.id}">$!{preArticle.title}</a>
+                下一篇：<a
+                    href="/article/$!{nextArticle.id}">$!{nextArticle.title}</a>
+            </p>
+
+            <p>
+                转载注明：<a href="/about">${article.user.nickname}</a>&gt;&gt;<a
+                    href="/article/${article.id}">${article.title}</a>
+            </p>
+        </section>
+    </div>
+</article>
+<section>
+##    畅言方式
+    <!--PC和WAP自适应版-->
+    <div id="SOHUCS" sid="article-${article.id}" ></div>
+    <script src="/static/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
+    <link rel="stylesheet" href="/static/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css">
+    <!-- 解决ueditor不能换行问题 -->
+    <style>
+        .syntaxhighlighter {
+            width: 100% !important;
+            margin: .3em 0 .3em 0 !important;
+            position: relative !important;
+            overflow: auto !important;
+            background-color: #f5f5f5 !important;/*这里可以根据自己的喜好更改背景颜色*/
+            border: 1px solid #ccc !important;/*border样式*/
+            border-radius: 4px !important;
+            border-collapse: separate !important;
+            word-break:break-all;
+        }
+    </style>
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+        (function(){
+            var appid = '需自行完善';
+            var conf = '需自行完善';
+            var width = window.innerWidth || document.documentElement.clientWidth;
+            if (width < 960) {
+                window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })();
+    </script>
+</section>
+#end
+
+

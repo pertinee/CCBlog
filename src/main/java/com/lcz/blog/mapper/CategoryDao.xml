@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcz.blog.mapper.CategoryDao">
+
+    <resultMap id="category" type="com.lcz.blog.bean.CategoryBean">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="count" property="count"/>
+    </resultMap>
+
+    <insert id="save">
+        INSERT INTO t_category VALUES (NULL, #{name})
+    </insert>
+
+    <update id="update">
+        UPDATE t_category
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+
+    <delete id="delete">
+        DELETE FROM t_category
+        WHERE id = #{id}
+    </delete>
+
+    <select id="queryList" resultMap="category">
+        <!--
+        SELECT
+            t_category.id,
+            t_category.name,
+            COUNT(articleId) AS `count`
+        FROM t_article
+            RIGHT JOIN t_category ON t_article.articleId = t_category.id
+        GROUP BY t_category.id
+        -->
+        SELECT
+            c.id,
+            c.name,
+            COUNT(a.id) AS `count`
+        FROM t_article a
+        RIGHT JOIN t_category c ON a.category_id = c.id
+        GROUP BY c.id
+    </select>
+
+    <select id="queryObject" resultMap="category">
+        SELECT *
+        FROM t_category
+        WHERE id = #{id}
+    </select>
+
+    <select id="pagination" resultMap="category">
+        SELECT *
+        FROM t_category
+        ORDER BY id DESC
+        LIMIT #{startIndex}, #{pageSize};
+    </select>
+
+    <select id="queryTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_category
+        WHERE id > 0
+    </select>
+
+
+</mapper>

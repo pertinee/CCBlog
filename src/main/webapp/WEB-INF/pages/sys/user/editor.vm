@@ -1,0 +1,206 @@
+<section class="content-header">
+    #if($error)
+        <div class="callout callout-warning">
+            <h4>操作失败</h4>
+            <p>${error}</p>
+        </div>
+    #end
+
+    #if($info)
+        <div class="callout callout-info">
+            <h4>操作信息</h4>
+            <p>${info}</p>
+        </div>
+    #end
+</section>
+<style>
+    .tableCenter th, .tableCenter td {
+        text-align: center;
+        height: 38px;
+    }
+</style>
+
+<script language="javascript">
+    function delcfm(user_id) {
+        if (!confirm("确认要删除？")) {
+            window.event.returnValue = false;
+        }else{
+            window.location.href= "/sys/user/delete/"+user_id;
+        }
+    }
+    function editUser(user_id) {
+        window.location.href= "/sys/user/update/"+user_id;
+    }
+
+    function lockUser(user_id) {
+        debugger;
+        var msg = "您确定要锁定用户吗？\n\n请确认！";
+        if (confirm(msg)==true){
+            window.location.href= "/sys/user/onOffLock/"+user_id;
+        }else{
+            return false;
+        }
+    }
+    function unLockUser(user_id) {
+        var msg = "您确定要解锁用户吗？\n\n请确认！";
+        if (confirm(msg)==true){
+            window.location.href= "/sys/user/onOffLock/"+user_id;
+        }else{
+            return false;
+        }
+    }
+</script>
+
+#if($editoruser)
+<script language="javascript">
+    onload = function () {
+        document.getElementById("userId").innerText = '${editoruser.id}';
+        document.getElementById("myusername").value = '${editoruser.username}';
+        //设置用户名不可编辑
+        document.getElementById("myusername").setAttribute("readOnly",true);
+        //密码不要放出来
+        //document.getElementById("userpassword").value = '${editoruser.password}';
+        document.getElementById("usernickname").value = '${editoruser.nickname}';
+        document.getElementById("type").value = '${editoruser.type}';
+        document.getElementById("website").value = '${editoruser.website}';
+        document.getElementById("useremail").value = '${editoruser.email}';
+        document.getElementById("image").value = '${editoruser.image}';
+        document.getElementById("userfrom").action = "/sys/user/update";
+        document.getElementById("mybutton").innerHTML = "更新用户";
+    }
+</script>
+#end
+
+
+<section class="content">
+    <form id="userfrom" action="/sys/user/create" method="post">
+        <div class="row">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h6>创建用户:</h6>
+
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body" style="display:block;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="myusername">用户名称:</label>
+                                <input type="text" name="username" class="form-control" id="myusername"
+                                       placeholder="请输入用户名称..."/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="userpassword">用户密码:</label>
+                                <input type="password" name="password" class="form-control" id="userpassword"
+                                       placeholder="请输入用户密码..."/>
+                                <textarea style="display: none" id="userId" name="id"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="usernickname">用户昵称:</label>
+                                <input type="text" name="nickname" class="form-control" id="usernickname"
+                                       placeholder="请输入用户昵称..."/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>用户分类:</label>
+                                <select name="type" id="type"
+                                        class="form-control select2 select2-hidden-accessible"
+                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                    <option value="1" id="1">管理员</option>
+                                    <option value="0" id="0">普通用户</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="website">站点:</label>
+                                <input type="text" name="website" class="form-control" id="website"
+                                       placeholder="请输入站点..."/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="useremail">用户邮箱:</label>
+                                <input type="text" name="email" class="form-control" id="useremail"
+                                       placeholder="请输入用户邮箱..."/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="useremail">头像地址:</label>
+                                <input type="text" name="image" class="form-control" id="image"
+                                       placeholder="请输入头像地址..."/>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="mybutton"></label>
+                            <button type="submit" id="mybutton" class="btn btn-block btn-default btn-flat">
+                                创建用户
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">用户信息</h3>
+                </div>
+
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover tableCenter">
+                        <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户名称</th>
+##                            <th>用户密码</th>
+                            <th>用户昵称</th>
+                            <th>用户邮箱</th>
+                            <th>创建时间</th>
+                            <th>编辑</th>
+                            <th>状态</th>
+                            <th>删除</th>
+                        </tr>
+                        #foreach($user in $users)
+                        <tr>
+                            <td width="10%">${user.id}</td>
+                            <td>${user.username}</td>
+##                            <td>${user.password}</td>
+
+                            <td>${user.nickname}</td>
+                            <td>${user.email}</td>
+                            <td>$!dateTool.format('yyyy-MM-dd HH:mm:ss ',$!user.createDate)</td>
+                            <td width="10%">
+                                <button class="btn btn-block btn-info" onclick="editUser(${user.id})">编辑</button>
+                            </td>
+                            <td width="10%">
+                                #if(${user.isLocked} == 0)
+                                    <button class="btn btn-block btn-primary" onclick="lockUser(${user.id})">正常</button>
+                                #else
+                                    <button class="btn btn-block btn-warning" onclick="unLockUser(${user.id})">锁定</button>
+                                #end
+                            </td>
+                            <td width="10%">
+                                <button class="btn btn-block btn-danger" onclick="delcfm(${user.id})">删除</button>
+                            </td>
+                        </tr>
+                        #end
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

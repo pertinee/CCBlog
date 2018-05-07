@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcz.blog.mapper.ArticleDao">
+    <resultMap id="articleMap" type="com.lcz.blog.bean.ArticleBean">
+        <id column="id" property="id"/>
+        <!--<result column="category_id" property="categoryId"/>-->
+        <!--<result column="user_id" property="userId"/>-->
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="create_date" property="createDate"/>
+        <result column="clicks" property="clicks"/>
+        <result column="remark" property="remark"/>
+        <result column="picture" property="picture"/>
+        <result column="is_draft" property="isDraft"/>
+        <association property="user" javaType="com.lcz.blog.bean.UserBean">
+            <id column="user_id" property="id"/>
+            <result column="image" property="image"/>
+            <result column="type" property="type"/>
+            <result column="nickname" property="nickname"/>
+            <result column="email" property="email"/>
+            <result column="website" property="website"/>
+        </association>
+        <association property="category" javaType="com.lcz.blog.bean.CategoryBean">
+            <id column="category_id" property="id"/>
+            <result column="name" property="name"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="articleLiteDtoMap" type="com.lcz.blog.bean.dto.ArticleLiteDto">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <select id="queryObject" parameterType="Integer" resultMap="articleMap">
+        SELECT a.*, c.*, u.*
+        FROM t_article a, t_category c, t_user u
+        WHERE a.category_id = c.id
+        AND a.user_id = u.id
+        AND a.id = #{id}
+    </select>
+
+    <select id="queryList" parameterType="com.lcz.blog.bean.ArticleBean" resultMap="articleMap">
+        SELECT a.*, c.*, u.*
+        FROM t_article a, t_category c, t_user u
+        WHERE a.category_id = c.id AND a.user_id = u.id
+        AND a.title LIKE CONCAT(CONCAT('%', #{title}), '%')
+        <if test="userId != null and userId !=''" >
+            AND a.user_id = #{userId}
+        </if>
+        ORDER BY a.create_date DESC
+    </select>
+
+    <select id="queryTotal" parameterType="com.lcz.blog.bean.ArticleBean" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_article
+        WHERE
+        1 = 1
+        AND category_id > 0
+        <if test="userId != null and userId !=''" >
+            AND t_article.user_id = #{userId}
+        </if>
+        <if test="isDraft != null" >
+            AND t_article.is_draft = #{isDraft}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="com.lcz.blog.bean.ArticleBean">
+        INSERT INTO t_article(
+            id,
+            category_id,
+            user_id,
+            title,
+            content,
+            create_date,
+            clicks,
+            remark,
+            picture,
+            is_draft
+        )VALUES(
+            #{id},
+            #{categoryId},
+            #{userId},
+            #{title},
+            #{content},
+            #{createDate},
+            #{clicks},
+            #{remark},
+            #{picture},
+            #{isDraft}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.lcz.blog.bean.ArticleBean">
+        UPDATE t_article
+        SET
+            category_id = #{categoryId},
+            title = #{title},
+            content = #{content},
+            remark = #{remark}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="com.lcz.blog.bean.ArticleBean">
+        DELETE FROM t_article
+        WHERE id = #{id}
+    </delete>
+
+    <update id="onOffShowArticle" parameterType="com.lcz.blog.bean.ArticleBean">
+        UPDATE t_article
+        SET is_draft = #{isDraft}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateArticleClicks">
+        UPDATE t_article
+        SET clicks = #{0}
+        WHERE id = #{1}
+    </update>
+
+    <!--文章分页列表（前台）-->
+    <select id="pageFront" parameterType="com.lcz.blog.util.Pager" resultMap="articleMap">
+        SELECT
+            a.*, c.*, u.*
+        FROM
+            t_article a, t_category c, t_user u
+        WHERE
+            a.category_id = c.id
+            AND a.user_id = u.id
+            and a.is_draft = 0
+        ORDER BY a.create_date DESC
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+    <!--文章分页列表（后台）-->
+    <select id="pageSys" parameterType="com.lcz.blog.util.Pager" resultMap="articleMap">
+        SELECT
+            a.*, c.*, u.*
+        FROM
+            t_article a, t_category c, t_user u
+        WHERE
+            a.category_id = c.id
+            AND a.user_id = u.id
+        <if test="userId != null and userId !=''" >
+            AND a.user_id = #{userId}
+        </if>
+        ORDER BY a.create_date DESC
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="queryNext" parameterType="java.lang.Integer" resultMap="articleLiteDtoMap">
+        SELECT
+            id,
+            title,
+            create_date
+        FROM t_article
+        WHERE id = (
+            SELECT id
+            FROM t_article
+            WHERE #{id} > id
+            AND category_id > 0
+            ORDER BY id DESC
+            LIMIT 1
+        )
+    </select>
+
+    <select id="queryPre" parameterType="Integer" resultMap="articleLiteDtoMap">
+        SELECT
+            id,
+            title,
+            create_date
+        FROM t_article
+        WHERE id = (
+            SELECT id
+            FROM t_article
+            WHERE id > #{id}
+            AND category_id > 0
+            ORDER BY id ASC
+            LIMIT 1
+        )
+    </select>
+
+    <select id="queryByCategory" resultMap="articleLiteDtoMap">
+        SELECT
+            id,
+            title,
+            create_date
+        FROM t_article
+        WHERE category_id = #{categoryId}
+        ORDER BY create_date DESC
+    </select>
+
+    <select id="queryArchive" resultMap="articleLiteDtoMap">
+        SELECT
+            id,
+            title,
+            create_date
+        FROM t_article
+        WHERE category_id > 0
+        ORDER BY create_date DESC
+    </select>
+
+    <select id="queryTitle" resultType="java.lang.String">
+        SELECT
+            a.title
+        FROM
+            t_article a
+        WHERE
+            a.is_draft = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcz.blog.mapper.LogDao">
+    <resultMap id="log" type="com.lcz.blog.bean.LogBean">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="operation" property="operation"/>
+        <result column="method" property="method"/>
+        <result column="params" property="params"/>
+        <result column="ip" property="ip"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <insert id="save">
+        INSERT INTO t_log VALUES (#{id}, #{username}, #{operation}, #{method}, #{params}, #{ip}, #{createDate})
+    </insert>
+
+    <select id="queryObject" resultMap="log">
+        SELECT * FROM t_log
+        WHERE id = #{id}
+    </select>
+
+    <select id="pagination" resultMap="log">
+        SELECT *
+        FROM t_log
+        ORDER BY create_date DESC
+        LIMIT #{startIndex}, #{pageSize};
+    </select>
+
+    <select id="queryList" resultMap="log" parameterType="com.lcz.blog.bean.LogBean">
+        SELECT *
+        FROM t_log
+        WHERE 1 = 1
+        <if test="operation != null and operation.trim() != ''">
+            and `operation` like concat('%',#{operation},'%')
+        </if>
+        ORDER BY create_date DESC
+    </select>
+
+    <select id="queryTotal" parameterType="com.lcz.blog.bean.LogBean" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_log
+        WHERE
+        1 = 1
+        <if test="operation != null and operation !=''" >
+            AND t_log.operation = #{operation}
+        </if>
+    </select>
+
+    <delete id="delete" parameterType="com.lcz.blog.bean.LogBean">
+        DELETE FROM t_log
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

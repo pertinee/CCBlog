@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lcz.blog.mapper.PermissionDao">
+
+
+    <resultMap id="permissionMap" type="com.lcz.blog.bean.RoleBean">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="userId" property="userId"/>
+    </resultMap>
+
+    <select id="queryPermByUserId" resultMap="permissionMap">
+        SELECT p.*
+        FROM t_user t,t_user_role ur, t_role_permission rp, t_permission p
+        WHERE t.userId = ur.user_id
+        AND rp.role_id = ur.role_id
+        AND rp.permission_id = p.id
+        AND t.userId = #{id}
+    </select>
+</mapper>

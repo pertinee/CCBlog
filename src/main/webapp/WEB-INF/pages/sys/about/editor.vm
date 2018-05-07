@@ -1,0 +1,49 @@
+<section class="content-header">
+    #if($error)
+        <div class="callout callout-warning">
+            <h4>操作失败</h4>
+            <p>${error}</p>
+        </div>
+    #end
+
+    #if($info)
+        <div class="callout callout-info">
+            <h4>操作信息</h4>
+            <p>${info}</p>
+        </div>
+    #end
+</section>
+
+#if($about)
+<script language="JavaScript">
+    onload = function() {
+        document.getElementById("myButton").innerHTML = '修改关于页面';
+        document.getElementById("myform").action = "/sys/about/update";
+    }
+</script>
+#end
+
+<section class="content">
+    <form action="/sys/about/create" id="myform" method="post">
+        <div id="layout">
+            <script id="aboutcontent" name="content" type="text/plain">${about.content}</script>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <button type="submit" id="myButton" class="btn btn-block btn-default btn-lg"
+                        onclick="javascript:Submit();">创建关于页面
+                </button>
+            </div>
+        </div>
+    </form>
+    <script src="/static/ueditor/ueditor.config.js"></script>
+    <script src="/static/ueditor/ueditor.all.min.js"></script>
+    <script src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script src="/static/ueditor/ueditor.parse.min.js"></script>
+    <script type="text/javascript">
+        var editor = UE.getEditor('aboutcontent',{
+            initialFrameHeight:600,
+            initialFrameWidth:'100%'
+        });
+    </script>
+</section>

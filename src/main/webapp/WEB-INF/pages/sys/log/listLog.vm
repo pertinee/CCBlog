@@ -1,0 +1,137 @@
+<style>
+    .tableCenter th, .tableCenter td {
+        text-align: center;
+        height: 38px;
+    }
+</style>
+
+<script language="javascript">
+    function delcfm(id) {
+        if (!confirm("确认要删除?")) {
+            window.event.returnValue = false;
+        }else{
+            window.location.href= "/sys/log/delete/"+id;
+        }
+    }
+</script>
+<section class="content-header">
+    #if($error)
+        <div class="callout callout-warning">
+            <h4>操作失败</h4>
+
+            <p>${error}</p>
+        </div>
+    #end
+
+
+    #if($info)
+        <div class="callout callout-info">
+            <h4>操作信息</h4>
+
+            <p>${info}</p>
+        </div>
+    #end
+</section>
+
+<section class="content">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">日志信息</h3>
+
+                    <div class="box-tools">
+                        <form method="post" action="/sys/log/search">
+                            <div class="input-group" style="width: 200px;">
+                                <input type="text" name="operation" class="form-control input-sm pull-right"
+                                       placeholder="搜索日志(用户操作)">
+
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover tableCenter">
+                        <tbody>
+                        <tr>
+                            <th class="hide">ID</th>
+                            <th>用户名</th>
+                            <th>用户操作</th>
+                            <th>请求方法</th>
+                            <th>请求参数</th>
+                            <th>IP地址</th>
+                            <th>创建时间</th>
+                            <th>删除</th>
+                        </tr>
+                            #foreach($log in $logs)
+                            <tr>
+                                <td class="hide">${log.id}</td>
+                                <td>${log.username}</td>
+                                <td>${log.operation}</td>
+                                <td>${log.method}</td>
+                                <td>${log.params}</td>
+                                <td>${log.ip}</td>
+                                <td>$!dateTool.format('yyyy-MM-dd HH:mm:ss ',$!log.createDate)</td>
+                                <td>
+                                    <button class="btn btn-block btn-danger btn-sm" onclick="delcfm('${log.id}')">删除</button>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <div class="box-footer clearfix">
+                    <ul class="pagination pagination-sm no-margin pull-right">
+                        <li><a href="/sys/log/?currentPage=${pager.firstPage}">首页</a></li>
+
+                        #if(${pager.prePage}!=-1)
+                            <li><a href="/sys/log/?currentPage=${pager.prePage}">上一页</a></li>
+                        #else
+                            <li class="disabled"><a href="">上一页</a></li>
+                        #end
+                        #if(${pager.nextPage}==-1)
+                            #set($prePage = ${pager.currentPage} - 2)
+                            #if($prePage>0)
+                                <li><a href="/sys/log/?currentPage=${prePage}">${prePage}</a></li>
+                            #end
+                        #end
+
+                        #if(${pager.prePage} != -1)
+                            <li><a href="/sys/log/?currentPage=${pager.prePage}">${pager.prePage}</a></li>
+                        #end
+
+                        <li class="active"><a
+                                href="/sys/log/?currentPage=${pager.currentPage}">${pager.currentPage}</a>
+                        </li>
+
+                        #if(${pager.nextPage}!=-1)
+                            <li><a href="/sys/log/?currentPage=${pager.nextPage}">${pager.nextPage}</a></li>
+                        #end
+
+                        #if(${pager.prePage}==-1)
+                            #set($nextPage = ${pager.nextPage} + 1)
+                            #if($nextPage!=0)
+                                <li><a href="/sys/log/?currentPage=${nextPage}">${nextPage}</a></li>
+
+                            #end
+                        #end
+
+                        #if(${pager.nextPage}!= -1)
+                            <li><a href="/sys/log/?currentPage=${pager.nextPage}">下一页</a></li>
+                        #else
+                            <li class="disabled"><a href="">下一页</a></li>
+                        #end
+                        <li><a href="/sys/log/?currentPage=${pager.lastPage}">末页</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

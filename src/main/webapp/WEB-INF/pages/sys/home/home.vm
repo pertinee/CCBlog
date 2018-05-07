@@ -1,0 +1,117 @@
+<script language="javascript">
+    $(function () {
+        $('.web_edit_div').addClass('animated fadeInLeft');
+        $('.web_edit_div').hide();
+    });
+    function showWebEditDiv() {
+        $('.web_edit_div').show();
+    }
+</script>
+<section class="content">
+    <!-- title row -->
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                <i class="fa fa-globe"></i> ${webAppDto.name}
+            </h2>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <!-- accepted payments column -->
+        <div class="col-xs-6">
+            <p class="lead">网站信息详情</p>
+
+            <div class="table-responsive">
+                <table class="table table-hover tableCenter">
+                    <tbody>
+                    <tr>
+                        <th style="width:35%">网站名称:</th>
+                        <td>$!{webAppDto.name}</td>
+                    </tr>
+                    <tr>
+                        <th>网站标题:</th>
+                        <td>$!{webAppDto.title}</td>
+                    </tr>
+                    <tr>
+                        <th>前台每页数量:</th>
+                        <td>$!{webAppDto.frontPage}</td>
+                    </tr>
+                    <tr>
+                        <th>后台每页数量:</th>
+                        <td>$!{webAppDto.sysPage}</td>
+                    </tr>
+                    <tr>
+                        <th>文章浏览总数:</th>
+                        <td>$!{webAppDto.articleViews}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 普通用户不显示更新操作 -->
+            #if(${user.type} == 1)
+                <div>
+                    <button type="submit" onclick="showWebEditDiv()" class="btn btn-default pull-left">修改</button>
+                </div>
+            #end
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-6 web_edit_div">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h2 class="box-title">网站信息编辑</h2>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form class="form-horizontal" action="/sys/web" method="post">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-3 control-label">网站名称:</label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="网站名称(可空)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="title" class="col-sm-3 control-label">网站标题:</label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="title" name="title"
+                                       placeholder="网站标题(可空)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="frontPage" class="col-sm-3 control-label">前台每页数量:</label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="frontPage" name="frontPage"
+                                       placeholder="首页文章显示数(可空)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sysPage" class="col-sm-3 control-label">后台每页数量:</label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="sysPage" name="sysPage"
+                                       placeholder="管理文章显示数(可空)">
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-default pull-left">确认</button>
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- this row will not appear when printing -->
+    <div class="row no-print">
+        <div class="col-xs-12">
+        </div>
+    </div>
+</section>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- favicon.ico -->
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <!-- jQuery -->
+    <script src="/static/user/widget/jquery/jquery.min.js"></script>
+</head>
+<body style="text-align:center">
+    <div>
+        <h2>浏览器表单提交方式</h2>
+        <h3>GET方式</h3>
+        <form action="test_get" method="post">
+            <input type="hidden" name="_method" value="GET"/>
+            <input type="submit" value="GET"/>
+        </form>
+        <hr>
+        <h2>POST方式</h2>
+        <form action="test_post" method="post">
+            <input type="hidden" name="_method" value="POST"/>
+            <input type="submit" value="POST"/>
+        </form>
+        <hr>
+        <h2>DELETE方式</h2>
+        <form action="test_delete/2" method="post">
+            <input type="hidden" name="_method" value="DELETE"/>
+            <input type="submit" value="DELETE/2"/>
+        </form>
+        <hr>
+        <h2>PUT方式</h2>
+        <form action="test_put/2" method="post">
+            <input type="hidden" name="_method" value="PUT"/>
+            <input type="submit" value="PUT/2"/>
+        </form>
+        <hr>
+        <h2>PATCH方式</h2>
+        <form action="test_patch/2" method="post">
+            <input type="hidden" name="_method" value="PATCH"/>
+            <input type="submit" value="PATCH/2"/>
+        </form>
+        <hr>
+    </div>
+<script>
+
+</script>
+</body>

@@ -1,0 +1,104 @@
+<style>
+    @media (max-width: 767px){
+        /*.navbar-form{margin-left: 0;}*/
+        .tbox{ width: 75%;display: inline-block;vertical-align: middle;}
+        .form-group{width: 100%;position: relative;color: #000;font-size: 12px;}
+        .placeholder{width: 75%;position: absolute;left: 0;top: 10px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;color: #ccc;padding: 0 10px;}
+    }
+    @media (min-width: 768px){
+        /*.navbar-form{margin-left: 0;}*/
+        .navbar-search{width:35%;}
+        .tbox{ width: 75% !important;display: inline-block;vertical-align: middle;background: none;border:none;border-bottom: solid 1px #ccc;border-radius: 0; }
+        .form-group{width: 100%;position: relative;color: #000;font-size: 12px;}
+        .btn-search{background: none;cursor: pointer;border: solid 1px #ccc; }
+        .placeholder{width: 75%;position: absolute;left: 0;top: 10px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;color: #ccc;padding: 0 10px;}
+        .btn-search:hover{background: none;border:solid 1px #fff;}
+    }
+
+</style>
+<header>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container col-lg-10 col-lg-offset-1">
+            <div class="navbar-header">
+                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">${webAppDto.name}</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">${webAppDto.name}</a>
+            </div>
+            <div class="navbar-collapse collapse" role="navigation">
+                <ul class="nav navbar-nav">
+                    <li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;首页</a></li>
+                    <li><a href="/category/list"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>&nbsp;分类</a></li>
+                    <li><a href="/archive"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>&nbsp;归档</a></li>
+                    <li><a href="/leave"><span class="glyphicon glyphicon-leaf" aria-hidden="true"></span>&nbsp;留言</a></li>
+                    <li><a href="/about"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;关于</a></li>
+                    <li><a href="/swagger-ui.html" target="_blank"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp;接口文档</a></li>
+                    <li><a href="/login"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;登录</a></li>
+                </ul>
+                <form class="navbar-form navbar-left navbar-search" method="post" action="/search">
+                    <div class="form-group">
+                        <span id="placeholder" class="placeholder"></span>
+                        <input type="text" id="s_content"  name="content" placeholder="" class="form-control tbox"/>
+                        <button id="search_btn" type="submit" class="btn btn-primary btn-search">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+##	百度统计代码
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?0b0939d415b65410b04c8886d164a427";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        //搜索框内容轮播
+        var i = 0;
+        $(function () {
+            getSearchTitleTimed();
+            //五秒刷新一次
+            setInterval(getSearchTitleTimed,5000);
+        });
+        function getSearchTitleTimed() {
+            var arr = ${search_list};
+            if(i >= arr.length){
+                i = 0;
+            }
+            $("#placeholder").text(arr[i]);
+//            $('.placeholder').addClass('animated fadeInUp');
+            i++;
+        }
+
+        //搜索框获得焦点时隐藏提示
+        $("#s_content").focus(function () {
+            $("#placeholder").hide();
+        });
+        //点击提示信息，将其隐藏、使输入框获得焦点
+        $("#placeholder").click(function () {
+            $("#placeholder").hide();
+            $("#s_content").focus();
+        });
+
+        //搜索框失去焦点时显示提示
+        $("#s_content").blur(function () {
+            $("#placeholder").show();
+        });
+
+        // 回车键事件
+        // 绑定键盘按下事件
+        $(document).keypress(function(e) {
+            // 回车键事件
+            if(e.which == 13) {
+                $("#search_btn").click();
+            }
+        });
+
+    </script>
+
+</header>

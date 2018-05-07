@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcz.blog.mapper.WebAppDao">
+    <resultMap id="webAppMap" type="com.lcz.blog.bean.WebAppBean">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="title" property="title"/>
+        <result column="front_page" property="frontPage"/>
+        <result column="sys_page" property="sysPage"/>
+    </resultMap>
+    <update id="update" parameterType="com.lcz.blog.bean.WebAppBean">
+        UPDATE t_web
+        <set>
+            <if test="name!=null">name = #{name},</if>
+            <if test="title!=null">title = #{title},</if>
+            <if test="frontPage!=null">front_page = #{frontPage},</if>
+            <if test="sysPage!=null">sys_page = #{sysPage}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <select id="queryObject" resultMap="webAppMap">
+        SELECT *
+        FROM t_web
+        WHERE id = #{id}
+    </select>
+    <select id="queryClicks" resultType="java.lang.Integer">
+        SELECT sum(clicks)
+        FROM t_article;
+    </select>
+    <select id="queryTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_web;
+    </select>
+    <select id="queryList" resultMap="webAppMap">
+        SELECT *
+        FROM t_web;
+    </select>
+
+    <insert id="save">
+        INSERT INTO t_web VALUES (NULL, #{name}, #{title}, #{frontPage}, #{sysPage})
+    </insert>
+</mapper>

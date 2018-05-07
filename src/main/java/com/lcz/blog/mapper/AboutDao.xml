@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcz.blog.mapper.AboutDao">
+    <resultMap id="about" type="com.lcz.blog.bean.AboutBean">
+        <id column="id" property="id"/>
+        <result column="content" property="content"/>
+    </resultMap>
+
+    <insert id="save">
+        INSERT INTO t_about VALUES (NULL, #{content})
+    </insert>
+
+    <update id="update">
+        UPDATE t_about
+        SET content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_about
+        WHERE id = #{id}
+    </delete>
+
+    <select id="queryObject" resultMap="about">
+        SELECT *
+        FROM t_about
+        WHERE id = #{id}
+    </select>
+
+    <select id="queryTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*) AS total
+        FROM t_about
+    </select>
+
+    <select id="queryList" resultMap="about">
+        select *
+        from t_about
+        where 1 = 1
+        <if test="id != null and id.trim() != ''">
+            and `id` = #{id}
+        </if>
+        <if test="content != null and content.trim() != ''">
+            and `content` like concat('%',#{content},'%')
+        </if>
+        order by id desc
+    </select>
+
+
+</mapper>

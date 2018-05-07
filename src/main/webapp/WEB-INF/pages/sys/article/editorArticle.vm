@@ -1,0 +1,99 @@
+<section class="content-header">
+    #if($error)
+        <div class="callout callout-warning">
+            <h4>操作失败</h4>
+
+            <p>${error}</p>
+        </div>
+    #end
+
+</section>
+
+#if($article)
+<script type="text/javascript">
+    onload = function () {
+        document.getElementById("category${article.category.id}").selected = true;
+        document.getElementById("articletitle").value = '${article.title}';
+        document.getElementById("articleId").innerText = '${article.id}';
+        document.getElementById("myButton").innerHTML = "修改文章";
+    }
+</script>
+#end
+
+
+
+<section class="content">
+    <form action="#if($article)/sys/article/update/${article.id}#else/sys/article/create#end" method="post">
+        <div class="row">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h6>文章基本信息:</h6>
+
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body" style="display:block;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="articletitle">文章标题:</label>
+                                <input type="text" name="title" class="form-control" id="articletitle"
+                                       placeholder="请输入文章标题..."/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>文章分类:</label>
+                                <select name="categoryId" id="sel"
+                                        class="form-control select2 select2-hidden-accessible"
+                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                    #foreach($category in $categories)
+                                        <option value="${category.id}"
+                                                id="category${category.id}">${category.name}</option>
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>文章简介:</label>
+                                <textarea name="remark" class="form-control" rows="3"
+                                          placeholder="请输入文章简介...">#if($article)${article.remark}#end</textarea>
+                            </div>
+                            <textarea id="userId" name="userId" style="display: none">${user.id}</textarea>
+                            #if($article.id)
+                                <textarea id="articleId" name="id" style="display: none">${article.id}</textarea>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="layout">
+            <script id="articlecontent" name="content" type="text/plain">#if($article)${article.content}#end</script>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <button type="submit" id="myButton" class="btn btn-block btn-default btn-lg"
+                        onclick="javascript:submitArticle();">发表文章
+                </button>
+            </div>
+        </div>
+    </form>
+    <script src="/static/ueditor/ueditor.config.js"></script>
+    <script src="/static/ueditor/ueditor.all.min.js"></script>
+    <script src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script src="/static/ueditor/ueditor.parse.min.js"></script>
+    <script type="text/javascript">
+        var editor = UE.getEditor('articlecontent',{
+            initialFrameHeight:400,
+            initialFrameWidth:'100%'
+        });
+    </script>
+</section>
+

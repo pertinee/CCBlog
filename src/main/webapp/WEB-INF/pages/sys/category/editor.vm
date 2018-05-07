@@ -1,0 +1,119 @@
+<section class="content-header">
+    #if($error)
+        <div class="callout callout-warning">
+            <h4>操作失败</h4>
+
+            <p>${error}</p>
+        </div>
+    #end
+
+    #if($info)
+        <div class="callout callout-info">
+            <h4>操作信息</h4>
+
+            <p>${info}</p>
+        </div>
+    #end
+</section>
+<style>
+    .tableCenter th, .tableCenter td {
+        text-align: center;
+        height: 38px;
+    }
+</style>
+
+<script language="javascript">
+    function delcfm(category_id) {
+        if (!confirm("确认要删除？")) {
+            window.event.returnValue = false;
+        }else{
+            window.location.href= "/sys/category/delete/"+category_id;
+        }
+    }
+    function editCategory(category_id) {
+        window.location.href= "/sys/category/update/"+category_id;
+    }
+</script>
+#if($category)
+<script language="javascript">
+    onload = function () {
+        document.getElementById("categoryName").value = '${category.name}';
+        document.getElementById("categoryId").innerText = '${category.id}';
+        document.getElementById("createButton").innerHTML = '修改分类';
+        document.getElementById("categoryFrom").action = "/sys/category/update";
+    }
+</script>
+#end
+<section class="content">
+    <form id="categoryFrom" action="/sys/category/create" method="post">
+        <div class="row">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h6>创建分类:</h6>
+
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body" style="display:block;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="categoryName">分类名称:</label>
+                                <input type="text" name="categoryName" class="form-control" id="categoryName"
+                                       placeholder="请输入分类名称..."/>
+                                <textarea style="display: none" id="categoryId" name="categoryId"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="createButton">操作:</label>
+                            <button type="submit" id="createButton" class="btn btn-block btn-default btn-flat"
+                                    >创建分类
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">分类信息</h3>
+                </div>
+
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover tableCenter">
+                        <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <th>名称</th>
+                            <th>数量</th>
+                            <th>编辑</th>
+                            <th>删除</th>
+                        </tr>
+                            #foreach($category in $categories)
+                            <tr>
+                                <td width="10%">${category.id}</td>
+                                <td>${category.name}</td>
+                                <td><span class="badge bg-red">${category.count}</span></td>
+                                <td width="10%">
+                                    <button class="btn btn-block btn-info" onclick="editCategory(${category.id})">编辑</button>
+                                </td>
+                                <td width="10%">
+                                    <button class="btn btn-block btn-danger" onclick="delcfm(${category.id})">删除</button>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>

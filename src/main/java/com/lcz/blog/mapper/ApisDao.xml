@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcz.blog.mapper.ApisDao">
+    <resultMap id="apis" type="com.lcz.blog.bean.ApisBean">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="content" property="content"/>
+    </resultMap>
+
+    <select id="queryList" resultMap="apis">
+        SELECT *
+        FROM t_apis
+        WHERE 1 = 1
+        <if test="id != null and id.trim() != ''">
+            and `id` = #{id}
+        </if>
+        <if test="name != null and name.trim() != ''">
+            and `name` like concat('%',#{name},'%')
+        </if>
+        <if test="content != null and content.trim() != ''">
+            and `content` like concat('%',#{content},'%')
+        </if>
+    </select>
+
+    <select id="queryObject" resultMap="apis">
+        SELECT *
+        FROM t_apis
+        WHERE id = #{id}
+    </select>
+
+    <insert id="save">
+        INSERT INTO t_apis VALUES (NULL, #{name}, #{content})
+    </insert>
+
+    <update id="update">
+        UPDATE t_apis
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">name=#{name},</if>
+            <if test="content != null">content=#{content},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateAll">
+        UPDATE t_apis
+        SET
+          name = #{name},
+          content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_apis
+        WHERE id = #{id}
+    </delete>
+
+
+</mapper>

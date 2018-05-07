@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>CCBlog登录页</title>
+    <script src="/static/user/widget/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script src="/static/adminLTE/bootstrap/js/bootstrap.min.js"></script>
+    <!-- 图标设置 -->
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/adminLTE/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- animate css -->
+    <link href="/static/user/css/animate.css" rel="stylesheet">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+        body {
+            background:url("/static/image/login_bg.jpg") no-repeat;
+            background-size:cover;
+
+            /*自适应垂直居中*/
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+        .login-logo {
+            font-size: 35px;
+            color: white;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 300;
+            text-shadow: 4px 4px 1px rgba(0,0,0,0.5);
+        }
+        .shadow{
+            box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+        }
+        .btn-flat {
+            border-radius: 0;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            border-width: 1px;
+            float: right;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function() {
+            //animate container
+            $('.container').addClass('animated fadeInDown');
+            changeCode();
+        });
+        function changeCode(){
+//            $.get("/login/codeimg", function(){
+//            });
+            var getTimestamp=new Date().getTime();
+            $("#codeImg").attr("src","/login/codeimg?t="+getTimestamp);
+        }
+        // 回车键事件
+        // 绑定键盘按下事件
+        $(document).keypress(function(e) {
+            // 回车键事件
+            if(e.which == 13) {
+                $("#login_btn").click();
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="login-logo">
+        <b>${webAppDto.name}</b>
+    </div>
+    <div class="well col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12 shadow">
+        #if($error)
+            <div class="alert alert-warning">
+                <a href="#" class="close" data-dismiss="alert">
+                    &times;
+                </a>
+                <strong>错误:</strong>${error}
+            </div>
+        #end
+        <form class="form-signin" action="/login" method="post">
+            <div class="form-group">
+                <label for="username" class="sr-only">账户:</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="请输入用户名" value="$!{username}">
+            </div>
+            <div class="form-group">
+                <label for="password" class="sr-only">密码:</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="请输入用户密码" value="$!{password}">
+            </div>
+            <div class="input-group">
+                <label for="code" class="sr-only">验证码:</label>
+                <input type="text" name="code" id="code" class="form-control" placeholder="请输入验证码" />
+                <span class="input-group-addon" style="margin: 1px;padding: 1px;">
+                    <img id="codeImg" onclick="changeCode()" style="cursor:pointer; height: 20px;">
+                </span>
+            </div>
+
+
+            <div class="checkbox" align="left">
+                <label>
+                    <input type="checkbox" name="remember" value="yes">记住我
+                </label>
+            </div>
+            <button id="login_btn" class="btn btn-primary btn-flat" type="submit">登录</button>
+        </form>
+    </div>
+</div>
+<!-- /container -->
+</body>
+</html>
